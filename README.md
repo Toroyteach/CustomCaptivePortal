@@ -7,15 +7,6 @@ This monorepo hosts two core applications:
 - **Frontend (ReactJS)**: Provides an admin interface to monitor, manage, and configure access.  
 - **Captive Portal Sign-in Pages**: Hosts the user-facing login pages for internet access.
 
-## Folder Structure
-/captive-portal-monorepo
-│── backend/         # NestJS backend application
-│── frontend/        # ReactJS admin panel
-│── captivesignin/   # Captive portal sign-in pages
-│── README.md        # Project documentation
-│── package.json     # Monorepo package management (if using npm/yarn workspaces)
-│── .gitignore       # Ignore unnecessary files
-
 ## Backend (NestJS)
 
 - Implements **authentication & authorization** via a **RADIUS server**.
