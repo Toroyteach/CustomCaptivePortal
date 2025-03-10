@@ -1,0 +1,44 @@
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+npm-debug.log
+yarn-debug.log
+pnpm-debug.log
+lerna-debug.log
+
+# Build output
+dist/
+.build/
+.cache/
+out/
+.next/
+coverage/
+
+# Editor & System files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Dependencies in subdirectories
+backend/node_modules/
+frontend/node_modules/
+captivesignin/node_modules/
+
+# TypeScript build
+*.tsbuildinfo
+
+# Docker & CI
+docker-compose.override.yml
