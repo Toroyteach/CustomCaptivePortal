@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, ConflictException, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
@@ -19,12 +19,25 @@ export class UsersService {
         private radCheckRepository: Repository<RadCheckModel>,
     ) { }
 
-    async findOne(username: string): Promise<User | undefined> {
-        return this.usersRepository.findOne({ where: { username } });
+    async findOne(identifier: string | number): Promise<User | null> {
+        return this.usersRepository.findOne({
+            where: [
+                { username: typeof identifier === "string" ? identifier : undefined },
+                { id: typeof identifier === "number" ? identifier : undefined },
+            ],
+        });
     }
 
-    async findAll(): Promise<User[]> {
-        return this.usersRepository.find();
+    async findAll(): Promise<Omit<User, "password">[]> {
+        const users = await this.usersRepository.find();
+        return users.map(({ password, ...user }) => user);
+    }
+
+    async deleteAdminUser(id: number): Promise<void> {
+        const user = await this.usersRepository.findOne({ where: { id } });
+        if (!user) throw new NotFoundException("User not found");
+
+        await this.usersRepository.remove(user);
     }
 
     async update(id: number, password: string): Promise<void> {
@@ -32,17 +45,27 @@ export class UsersService {
         await this.usersRepository.update(id, { password: hash });
     }
 
-    async create(username: string, password: string): Promise<User> {
-        const hash = await bcrypt.hash(password, 10);
-        const user = this.usersRepository.create({ username, password: hash });
-        return this.usersRepository.save(user);
+    async create(username: string, password: string, role: UserRole): Promise<User> {
+        try {
+            // Check if the username already exists
+            const existingUser = await this.usersRepository.findOne({ where: { username } });
+            if (existingUser) {
+                throw new ConflictException('Username is already taken');
+            }
+
+            // Hash password and create user
+            const hash = await bcrypt.hash(password, 10);
+            const user = this.usersRepository.create({ username, password: hash, role });
+
+            return await this.usersRepository.save(user);
+        } catch (error) {
+            if (error instanceof ConflictException) {
+                throw error; // Re-throw known errors
+            }
+            throw new InternalServerErrorException('An error occurred while creating the user');
+        }
     }
 
-    //This of customers..
-    async createUserInfo(userData: Partial<UserInfo>): Promise<UserInfo> {
-        const userInfo = this.usersInfoRepository.create(userData);
-        return await this.usersInfoRepository.save(userInfo);
-    }
 
     async setRole(userId: number, role: UserRole): Promise<User> {
         const user = await this.usersRepository.findOne({ where: { id: userId } });
@@ -53,29 +76,50 @@ export class UsersService {
     }
 
     //This of customers..
-    async getAllUserInfo() {
-        return this.usersInfoRepository.find();
+    async createUserInfo(userData: Partial<UserInfo>): Promise<UserInfo> {
+        const currentDate = new Date();
+        const userInfo = this.usersInfoRepository.create({
+            ...userData,
+            created_at: currentDate,
+            updated_at: currentDate,
+        });
+        return await this.usersInfoRepository.save(userInfo);
+    }
+    // Get all customers
+    async getAllCustomers(): Promise<UserInfo[]> {
+        return await this.usersInfoRepository.find();
+    }
+
+    // Get a single customer by ID
+    async getCustomerById(id: number): Promise<UserInfo | null> {
+        return await this.usersInfoRepository.findOne({ where: { id } });
+    }
+
+    // Update a customer
+    async updateCustomer(id: number, updateData: Partial<UserInfo>): Promise<UserInfo> {
+        await this.usersInfoRepository.update(id, updateData);
+        return await this.getCustomerById(id);
     }
 
     //This of customers..
-    async deleteUser(id: number) {
+    async deleteCustomer(id: number) {
         const userData = await this.usersInfoRepository.findOne({ where: { id } });
-    
+
         if (!userData) {
             throw new NotFoundException('User info not found');
         }
-    
+
         const phone = userData.mobilephone;
         if (!phone) {
             throw new BadRequestException('At least one phone number must be provided');
         }
-    
+
         // Find and delete all RadCheck records with the same phone number
         await this.radCheckRepository.delete({ username: phone });
-    
+
         // Find and delete all UserInfo records with the same mobile phone number
         await this.usersInfoRepository.delete({ mobilephone: phone });
-    
+
         return { message: 'All related customer data deleted successfully' };
     }
 }

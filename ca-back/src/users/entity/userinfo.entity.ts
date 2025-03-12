@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 //This is the table for the customers user the service
 @Entity({ name: 'userinfo' })
@@ -12,11 +12,11 @@ export class UserInfo {
   @Column({ nullable: true, length: 200 })
   mobilephone?: string;
 
-  @Column({ type: 'datetime', nullable: true })
-  updateDate?: string;
+  @CreateDateColumn({ type: 'timestamp' })
+  created_at: Date;
 
-  @Column({ type: 'datetime', nullable: true })
-  creationdate?: string;
+  @UpdateDateColumn({ type: 'timestamp' })
+  updated_at: Date;
 
   @Column({ nullable: false, length: 128, default: 'administrator' })
   creationby: string;

@@ -11,6 +11,7 @@ import { RadCheckModel } from './users/entity/radcheck.entity';
 import { NotificationModule } from './notification/notification.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CleanupModule } from './cleanup/cleanup.module';
+import { NetflowModule } from './netflow/netflow.module';
 
 @Module({
   imports: [
@@ -29,12 +30,13 @@ import { CleanupModule } from './cleanup/cleanup.module';
         database: configService.get('DATABASE_NAME'),
         entities: [User, UserInfo, RadCheckModel],
         synchronize: true, // TODO: Disable in production
-        dropSchema: true,// TODO: Remove in production
+        // dropSchema: true,// TODO: Remove in production
       }),
     }),
     UserModule,
     AuthModule,
     NotificationModule,
+    NetflowModule,
   ],
   controllers: [AppController],
   providers: [AppService],

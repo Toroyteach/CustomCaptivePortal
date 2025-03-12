@@ -1,6 +1,6 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import api from "../utils/api";
+import api from "../../utils/api";
 
 const SmsPage = () => {
   const { data: smss } = useQuery({

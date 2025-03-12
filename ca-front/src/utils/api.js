@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://jsonplaceholder.typicode.com", // Temporary API
+  baseURL: "http://localhost:4000/api", // API Endpoint
 });
 
 api.interceptors.request.use((config) => {

@@ -26,13 +26,18 @@ export class AuthService {
             const { password, ...result } = user;
             return result;
         }
-        throw new UnauthorizedException();
+        throw new UnauthorizedException("Invalid username or password");
     }
 
     async login(username: string, password: string) {
         const user = await this.validateUser(username, password);
         return {
             access_token: this.jwtService.sign({ username: user.username, sub: user.id }),
+            user: {
+                id: user.id,
+                username: user.username,
+                email: user.email, // Include other necessary fields
+            }
         };
     }
 
@@ -43,14 +48,14 @@ export class AuthService {
             throw new BadRequestException(`At least one phone number must be provided`);
         }
 
-        const regDate = moment().format('YYYY-MM-DD 00:00:00');
+        const regDate = new Date();
 
         // Set default values
         registrationData.username = phone;
         registrationData.mobilephone = phone;
         registrationData.creationby = 'administrator';
-        registrationData.creationdate = regDate;
-        registrationData.updateDate = regDate;
+        registrationData.created_at = regDate;
+        registrationData.updated_at = regDate;
 
         const password = Math.random().toString(36).slice(-8);
 
