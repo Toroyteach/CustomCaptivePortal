@@ -14,7 +14,9 @@ export const AuthProvider = ({ children }) => {
       setUser(data.user);
       setToken(data.access_token);
       localStorage.setItem("token", data.access_token);
+      return data.user.role;
     } catch (error) {
+      setError("Invalid username or password"); // Set error message
       throw new Error("Login failed");
     }
   };

@@ -12,6 +12,10 @@ import { NotificationModule } from './notification/notification.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CleanupModule } from './cleanup/cleanup.module';
 import { NetflowModule } from './netflow/netflow.module';
+import { MessageLogModel } from './notification/entity/messagelog.entity';
+import { RadPostAuthModel } from './netflow/entity/radpostauth.entity';
+import { RadAcctModel } from './netflow/entity/radacc.entity';
+import { CaptivelinkModule } from './captivelink/captivelink.module';
 
 @Module({
   imports: [
@@ -28,7 +32,7 @@ import { NetflowModule } from './netflow/netflow.module';
         username: configService.get('DATABASE_USER'),
         password: configService.get('DATABASE_PASSWORD'),
         database: configService.get('DATABASE_NAME'),
-        entities: [User, UserInfo, RadCheckModel],
+        entities: [User, UserInfo, RadCheckModel, MessageLogModel, RadPostAuthModel, RadAcctModel],
         synchronize: true, // TODO: Disable in production
         // dropSchema: true,// TODO: Remove in production
       }),
@@ -37,6 +41,7 @@ import { NetflowModule } from './netflow/netflow.module';
     AuthModule,
     NotificationModule,
     NetflowModule,
+    CaptivelinkModule,
   ],
   controllers: [AppController],
   providers: [AppService],

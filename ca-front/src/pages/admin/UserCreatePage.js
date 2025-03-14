@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import { Container, Form, Button, Alert, Card, Spinner } from "react-bootstrap";
 import api from "../../utils/api";
+import NavigationBar from "../../components/Navbar";
 
 const UserCreatePage = () => {
   const navigate = useNavigate();
@@ -48,55 +50,74 @@ const UserCreatePage = () => {
   };
 
   return (
-    <div className="p-6 max-w-md mx-auto">
-      <h1 className="text-2xl font-semibold mb-4">Create User</h1>
-      {error && <p className="text-red-500">{error}</p>}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          name="username"
-          placeholder="Username"
-          value={formData.username}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-          required
-        />
-        <input
-          type="password"
-          name="confirmPassword"
-          placeholder="Confirm Password"
-          value={formData.confirmPassword}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-          required
-        />
-        <select
-          name="role"
-          value={formData.role}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-        >
-          <option value="manager">Manager</option>
-          <option value="admin">Admin</option>
-        </select>
-        <button
-          type="submit"
-          className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-          disabled={createUser.isLoading}
-        >
-          {createUser.isLoading ? "Creating..." : "Create User"}
-        </button>
-      </form>
-    </div>
+    <>
+      {/* Navbar */}
+      <NavigationBar/>
+
+      {/* Main Content */}
+      <Container className="py-4 d-flex justify-content-center">
+        <Card className="shadow-sm p-4" style={{ maxWidth: "500px", width: "100%" }}>
+          <Card.Body>
+            <h2 className="text-center mb-4">Create User</h2>
+            {error && <Alert variant="danger">{error}</Alert>}
+
+            <Form onSubmit={handleSubmit}>
+              <Form.Group className="mb-3">
+                <Form.Label>Username</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleChange}
+                  placeholder="Enter username"
+                  required
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Enter password"
+                  required
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Confirm Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="Confirm password"
+                  required
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Role</Form.Label>
+                <Form.Select name="role" value={formData.role} onChange={handleChange}>
+                  <option value="manager">Manager</option>
+                  <option value="admin">Admin</option>
+                </Form.Select>
+              </Form.Group>
+
+              <Button variant="primary" type="submit" className="w-100 mb-3" disabled={createUser.isLoading}>
+                {createUser.isLoading ? <Spinner as="span" animation="border" size="sm" /> : "Create User"}
+              </Button>
+
+              <Button variant="secondary" className="w-100" onClick={() => navigate("/users")}>
+                Back to Users
+              </Button>
+            </Form>
+          </Card.Body>
+        </Card>
+      </Container>
+    </>
   );
 };
 

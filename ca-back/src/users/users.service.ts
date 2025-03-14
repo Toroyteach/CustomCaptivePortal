@@ -66,7 +66,6 @@ export class UsersService {
         }
     }
 
-
     async setRole(userId: number, role: UserRole): Promise<User> {
         const user = await this.usersRepository.findOne({ where: { id: userId } });
         if (!user) throw new Error('User not found');
@@ -84,6 +83,8 @@ export class UsersService {
             updated_at: currentDate,
         });
         return await this.usersInfoRepository.save(userInfo);
+
+        //TODO: add logic to send the user the login credetials
     }
     // Get all customers
     async getAllCustomers(): Promise<UserInfo[]> {

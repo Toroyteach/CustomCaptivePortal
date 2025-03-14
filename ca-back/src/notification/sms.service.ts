@@ -92,7 +92,7 @@ export class SmsApiService {
             .getRawMany();
     }
 
-    getSMSBalance(asPerDate?) {
+    async getSMSBalance(asPerDate?) {
 
         const start = moment(asPerDate ? new Date(asPerDate) : new Date()).format('YYYY-MM-DD 00:00:00',);
 

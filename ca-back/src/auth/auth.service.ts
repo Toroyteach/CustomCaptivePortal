@@ -9,11 +9,13 @@ import { RadCheckModel } from '../users/entity/radcheck.entity';
 import { Chance } from 'chance';
 import * as moment from 'moment';
 import { UserInfo } from 'src/users/entity/userinfo.entity';
+import { SmsApiService } from 'src/notification/sms.service';
 const chance = new Chance();
 
 @Injectable()
 export class AuthService {
     constructor(
+        private smsService: SmsApiService,
         private usersService: UsersService,
         private jwtService: JwtService,
         @InjectRepository(RadCheckModel)
@@ -37,6 +39,7 @@ export class AuthService {
                 id: user.id,
                 username: user.username,
                 email: user.email, // Include other necessary fields
+                role: user.role,
             }
         };
     }
@@ -80,6 +83,8 @@ export class AuthService {
 
         await this.radCheckRepository.save(rad);
 
+        // this.smsService.send(phone, message);
+
         // Return created user info along with rad check data
         return { userInfo, rad };
     }
@@ -116,12 +121,9 @@ export class AuthService {
 
         this.radCheckRepository.save(existing);
 
-        //TODO: Send the token to the user
-        // this.notificationService.sendRegistrationPassword(
-        //     existing.username,
-        //     existing.value,
-        //     phone,
-        // );
+        const message = `Network Login Details  username; ${existing.username} Password: ${existing.value}`;
+
+        // this.smsService.send(phone, message);
         
         return existing;
     }

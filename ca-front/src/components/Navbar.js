@@ -1,72 +1,78 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthProvider";
+import React from "react";
+import { Navbar, Nav, NavDropdown, Container, Button } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthProvider"; // Adjust based on your auth context path
 
-const Navbar = () => {
+const NavigationBar = () => {
   const { user, logout } = useAuth();
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [customersDropdownOpen, setCustomersDropdownOpen] = useState(false);
+  const navigate = useNavigate();
+
+  // Logout Function
+  const handleLogout = () => {
+    logout(); // Call logout from AuthProvider
+    navigate("/login"); // Redirect to login page after logout
+  };
 
   return (
-    <nav className="bg-gray-800 p-4 text-white flex justify-between items-center">
-      <div className="flex space-x-4">
-        <Link to="/" className="hover:text-gray-300">Home</Link>
+    <Navbar bg="dark" variant="dark" expand="lg" className="shadow">
+      <Container>
+        {/* Brand Name */}
+        <Navbar.Brand as={Link} to="/">CA</Navbar.Brand>
 
-        {/* Users Dropdown */}
-        <div className="relative">
-          <button
-            onClick={() => setDropdownOpen(!dropdownOpen)}
-            className="hover:text-gray-300"
-          >
-            Users ▼
-          </button>
-          {dropdownOpen && (
-            <div className="absolute bg-gray-700 mt-2 w-40 rounded shadow-lg">
-              <Link to="/users" className="block px-4 py-2 hover:bg-gray-600">All Users</Link>
-              <Link to="/users/create" className="block px-4 py-2 hover:bg-gray-600">Create User</Link>
-            </div>
-          )}
-        </div>
+        {/* Toggle Button for Mobile */}
+        <Navbar.Toggle aria-controls="navbar-nav" />
 
-        {/* Customers Dropdown */}
-        <div className="relative">
-          <button
-            onClick={() => setCustomersDropdownOpen(!customersDropdownOpen)}
-            className="hover:text-gray-300"
-          >
-            Customers ▼
-          </button>
-          {customersDropdownOpen && (
-            <div className="absolute bg-gray-700 mt-2 w-40 rounded shadow-lg">
-              <Link to="/customers" className="block px-4 py-2 hover:bg-gray-600">All Customers</Link>
-              <Link to="/customers/:id" className="block px-4 py-2 hover:bg-gray-600">Customer Details</Link>
-            </div>
-          )}
-        </div>
+        {/* Navigation Items */}
+        <Navbar.Collapse id="navbar-nav">
+          <Nav className="me-auto">
+            {/* Show Admin Menu Only for Admins */}
+            {user?.role === "admin" && (
+              <Nav.Link as={Link} to="/">Dashboard</Nav.Link>
+            )}
 
-        <Link to="/sms" className="hover:text-gray-300">SMS Sent Log</Link>
-        <Link to="/token-request" className="hover:text-gray-300">Token Request</Link>
-      </div>
+            {/* Show Admin Menu Only for Admins */}
+            {user?.role === "admin" && (
+              <NavDropdown title="Admin" id="admin-dropdown">
+                <NavDropdown.Item as={Link} to="/users">All Users</NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/users/create">Create User</NavDropdown.Item>
+              </NavDropdown>
+            )}
 
-      <div>
-        {user ? (
-          <>
-            <span className="mr-4">{user.name}</span>
-            <button
-              onClick={logout}
-              className="bg-red-500 px-3 py-1 rounded hover:bg-red-600"
-            >
-              Logout
-            </button>
-          </>
-        ) : (
-          <Link to="/login" className="bg-blue-500 px-3 py-1 rounded hover:bg-blue-600">
-            Login
-          </Link>
-        )}
-      </div>
-    </nav>
+            {/* Show Clients Menu for Admins & Managers */}
+            {(user?.role === "admin") && (
+              <NavDropdown title="Client" id="clients-dropdown">
+                <NavDropdown.Item as={Link} to="/customers">All Clients</NavDropdown.Item>
+              </NavDropdown>
+            )}
+
+            {/* Show Tokens Sent Only for Admins */}
+            {user?.role === "admin" && (
+              <NavDropdown title="Tokens Sent" id="tokens-dropdown">
+                <NavDropdown.Item as={Link} to="/sms-logs">All Token Logs</NavDropdown.Item>
+              </NavDropdown>
+            )}
+
+            {/* Show Token Request for Admins & Managers */}
+            {(user?.role === "admin" || user?.role === "manager") && (
+              <Nav.Link as={Link} to="/token-request">Token Request</Nav.Link>
+            )}
+          </Nav>
+
+          {/* Right Section - User Info & Authentication */}
+          <Nav>
+            {user ? (
+              <>
+                <Navbar.Text className="me-3">Welcome, {user.username}</Navbar.Text>
+                <Button variant="outline-danger" onClick={handleLogout}>Logout</Button>
+              </>
+            ) : (
+              <Button as={Link} to="/login" variant="primary">Login</Button>
+            )}
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
   );
 };
 
-export default Navbar;
+export default NavigationBar;

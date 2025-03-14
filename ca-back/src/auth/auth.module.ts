@@ -9,6 +9,8 @@ import { JwtStrategy } from './jwt.strategy';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RadCheckModel } from 'src/users/entity/radcheck.entity';
 import { UserInfo } from 'src/users/entity/userinfo.entity';
+import { SmsApiService } from 'src/notification/sms.service';
+import { MessageLogModel } from 'src/notification/entity/messagelog.entity';
 
 @Module({
     imports: [
@@ -22,9 +24,9 @@ import { UserInfo } from 'src/users/entity/userinfo.entity';
                 signOptions: { expiresIn: configService.get('JWT_EXPIRES_IN') },
             }),
         }),
-        TypeOrmModule.forFeature([RadCheckModel, UserInfo])
+        TypeOrmModule.forFeature([RadCheckModel, UserInfo, MessageLogModel])
     ],
-    providers: [AuthService, JwtStrategy],
+    providers: [AuthService, JwtStrategy, SmsApiService],
     controllers: [AuthController],
 })
 export class AuthModule { }

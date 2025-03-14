@@ -12,6 +12,15 @@ export class UserInfo {
   @Column({ nullable: true, length: 200 })
   mobilephone?: string;
 
+  @Column()
+  email: string;
+
+  @Column()
+  hostEmail: string;
+
+  @Column({ nullable: true })
+  token: string;
+
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
 

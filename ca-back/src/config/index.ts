@@ -39,6 +39,8 @@ const envVarsSchema = joi
     CONTROLLER_USERNAME: joi.string().required(),
     CONTROLLER_PASSWORD: joi.string().required(),
     NETFLOW_PORT: joi.number().port().default(5998),
+    PORTAL_BASE_URL: joi.string().required(),
+    COMPANY_EMAIL_DOMAIN: joi.string().required(),
 
     DB_LOGGING: joi
       .boolean()
@@ -89,5 +91,9 @@ export const config = {
   },
   netflow: {
     port: envVars.NETFLOW_PORT,
+  },
+  captivePortal: {
+    baseUrl: envVars.PORTAL_BASE_URL, // Added portal base URL
+    companyEmailDomain: envVars.COMPANY_EMAIL_DOMAIN,
   },
 };
