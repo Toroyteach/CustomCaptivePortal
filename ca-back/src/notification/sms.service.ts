@@ -30,9 +30,6 @@ export class SmsApiService {
             message,
         };
 
-        console.log('Message sent to customer is as below...');
-        console.log({ message });
-
         const resp = await this._postRequest(msg);
         this.saveMessageLog(msg, resp[0]);
 
@@ -72,39 +69,47 @@ export class SmsApiService {
 
     }
 
-    async getMessageLog(startDate?, endDate?, skip = 0, take = 100) {
+    async getAllMessageLogs(page: number, limit: number): Promise<{ logs: MessageLogModel[]; total: number; page: number; limit: number }> {
+        const [logs, total] = await this.messageRepository.findAndCount({
+            skip: (page - 1) * limit,
+            take: limit,
+            order: { dateCreated: 'DESC' }, // Sort by latest
+        });
 
-        const startDateFilter = startDate ? new Date(startDate) : new Date();
-
-        const endDateFilter = endDate ? new Date(endDate) : new Date();
-
-        const start = moment(startDateFilter).format('YYYY-MM-DD 00:00:00');
-
-        const end = moment(endDateFilter)
-            .add(1, 'day')
-            .format('YYYY-MM-DD 00:00:00');
-
-        return this.messageRepository
-            .createQueryBuilder('msg')
-            .where('date_created >= :start and date_created <= :end', { start, end })
-            .skip(skip)
-            .take(take)
-            .getRawMany();
+        return { logs, total, page, limit };
     }
 
-    async getSMSBalance(asPerDate?) {
+    async getMessagesByMobile(mobile: string, skip = 0, take = 10) {
+        const [data, total] = await this.messageRepository
+            .createQueryBuilder('msg')
+            .where('msg.msisdn = :mobile', { mobile })
+            .orderBy('msg.dateCreated', 'DESC') // Sort by latest
+            .skip(skip)
+            .take(take)
+            .getManyAndCount();
 
-        const start = moment(asPerDate ? new Date(asPerDate) : new Date()).format('YYYY-MM-DD 00:00:00',);
+        return {
+            data,
+            total,
+            skip,
+            take,
+            totalPages: Math.ceil(total / take),
+            currentPage: Math.floor(skip / take) + 1,
+        };
+    }
 
-        const end = moment(asPerDate ? new Date(asPerDate) : new Date()).add(1, 'day').format('YYYY-MM-DD 00:00:00');
-
-        return this.messageRepository
+    async getSMSBalance() {
+        const latestBalance = await this.messageRepository
             .createQueryBuilder('message_log')
-            .select('credit_balance as balance')
-            .where('date_created >= :start and date_created <= :end', { start, end })
-            .orderBy('date_created', 'DESC')
+            .select('message_log.credit_balance', 'credit_balance')
+            .orderBy('message_log.id', 'DESC')
             .limit(1)
             .getRawOne();
+
+        return {
+            success: true,
+            data: { credit_balance: latestBalance?.credit_balance || 0 },
+        };
     }
 
     private async _postRequest(data): Promise<any> {

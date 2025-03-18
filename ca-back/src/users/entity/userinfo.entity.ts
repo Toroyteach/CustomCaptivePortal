@@ -15,7 +15,7 @@ export class UserInfo {
   @Column()
   email: string;
 
-  @Column()
+  @Column({ nullable: true })
   hostEmail: string;
 
   @Column({ nullable: true })

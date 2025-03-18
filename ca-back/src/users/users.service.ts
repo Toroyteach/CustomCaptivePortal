@@ -6,11 +6,13 @@ import { User, UserRole } from './entity/user.entity';
 import { UserInfo } from './entity/userinfo.entity';
 import { RadCheckModel } from './entity/radcheck.entity';
 import { Chance } from 'chance';
+import { SmsApiService } from 'src/notification/sms.service';
 const chance = new Chance();
 
 @Injectable()
 export class UsersService {
     constructor(
+        private smsService: SmsApiService,
         @InjectRepository(User)
         private usersRepository: Repository<User>,
         @InjectRepository(UserInfo)
@@ -82,13 +84,38 @@ export class UsersService {
             created_at: currentDate,
             updated_at: currentDate,
         });
-        return await this.usersInfoRepository.save(userInfo);
 
-        //TODO: add logic to send the user the login credetials
+        const savedUser = await this.usersInfoRepository.save(userInfo);
+
+        // Generate a temporary password
+        const password = Math.random().toString(36).slice(-8);
+
+        // Store the credentials in RadCheck
+        const radCheck = this.radCheckRepository.create({
+            username: savedUser.mobilephone,
+            value: password,
+            expired: false,
+            expiryDate: new Date(Date.now() + 8 * 60 * 60 * 1000), // 8-hour expiry
+        });
+
+        await this.radCheckRepository.save(radCheck);
+
+        // Send login credentials via SMS
+        const message = `Welcome! Your login details: Username: ${savedUser.mobilephone}, Password: ${password}`;
+        await this.smsService.send(savedUser.mobilephone, message);
+
+        return savedUser;
     }
+
     // Get all customers
-    async getAllCustomers(): Promise<UserInfo[]> {
-        return await this.usersInfoRepository.find();
+    async getAllCustomers(page: number, limit: number): Promise<{ customers: UserInfo[]; total: number; page: number; limit: number }> {
+        const [customers, total] = await this.usersInfoRepository.findAndCount({
+            skip: (page - 1) * limit,
+            take: limit,
+            order: { created_at: 'DESC' },
+        });
+
+        return { customers, total, page, limit };
     }
 
     // Get a single customer by ID

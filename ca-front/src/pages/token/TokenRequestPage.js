@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { Form, Button, Container, Card, Alert, Spinner } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import api from "../../utils/api";
 import NavigationBar from "../../components/Navbar";
 
 const TokenRequestPage = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
     email: "",
-    phone_number: "",
+    mobilephone: "",
   });
 
   const [successMessage, setSuccessMessage] = useState(null);
@@ -20,9 +22,9 @@ const TokenRequestPage = () => {
       return response.data;
     },
     onSuccess: () => {
-      setSuccessMessage("Customer created successfully!");
+      setSuccessMessage("Customer created successfully! And Token Sent to user");
       setErrorMessage(null);
-      setFormData({ username: "", email: "", phone_number: "" });
+      setFormData({ username: "", email: "", mobilephone: "" });
     },
     onError: () => {
       setErrorMessage("Failed to create customer. Please try again.");
@@ -47,6 +49,9 @@ const TokenRequestPage = () => {
       {/* Page Content */}
       <Container className="d-flex justify-content-center align-items-center" style={{ minHeight: "80vh" }}>
         <Card className="shadow-lg p-4" style={{ width: "500px" }}>
+        <Button variant="secondary" className="w-100" onClick={() => navigate("/customers")}>
+            Back to clients
+          </Button>
           <h2 className="text-center mb-4">Request a Client Signup Token</h2>
 
           {successMessage && <Alert variant="success">{successMessage}</Alert>}
@@ -81,8 +86,8 @@ const TokenRequestPage = () => {
               <Form.Label>Phone Number</Form.Label>
               <Form.Control
                 type="tel"
-                name="phone_number"
-                value={formData.phone_number}
+                name="mobilephone"
+                value={formData.mobilephone}
                 onChange={handleChange}
                 placeholder="Enter phone number"
                 required

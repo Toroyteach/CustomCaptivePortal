@@ -83,7 +83,9 @@ export class AuthService {
 
         await this.radCheckRepository.save(rad);
 
-        // this.smsService.send(phone, message);
+        // Fix: Send SMS with generated password
+        const message = `Your registration is successful. Your login password is: ${password}`;
+        await this.smsService.send(phone, message);
 
         // Return created user info along with rad check data
         return { userInfo, rad };
@@ -121,10 +123,10 @@ export class AuthService {
 
         this.radCheckRepository.save(existing);
 
-        const message = `Network Login Details  username; ${existing.username} Password: ${existing.value}`;
+        // Fix: Send SMS with new login details
+        const message = `Network Login Details: Username: ${existing.username}, Password: ${password}`;
+        await this.smsService.send(phone, message);
 
-        // this.smsService.send(phone, message);
-        
         return existing;
     }
 }

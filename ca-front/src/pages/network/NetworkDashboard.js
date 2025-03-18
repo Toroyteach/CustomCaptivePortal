@@ -3,7 +3,12 @@ import { useQuery } from "@tanstack/react-query";
 import api from "../../utils/api";
 import { Bar } from "react-chartjs-2";
 import "chart.js/auto";
-import { Card, Spinner, Container, Row, Col } from "react-bootstrap";
+import {
+    Card, Spinner, Container, Row, Col,
+
+
+    Alert
+} from "react-bootstrap";
 import NavigationBar from "../../components/Navbar";
 
 const NetworkDashboard = () => {
@@ -12,22 +17,22 @@ const NetworkDashboard = () => {
         queryKey: ["users"],
         queryFn: async () => (await api.get("/radius/users")).data,
     });
-    
+
     const { data: authLogs, isLoading: loadingAuthLogs } = useQuery({
         queryKey: ["authLogs"],
         queryFn: async () => (await api.get("/radius/auth-logs")).data,
     });
-    
+
     const { data: activeSessions, isLoading: loadingActiveSessions } = useQuery({
         queryKey: ["activeSessions"],
         queryFn: async () => (await api.get("/radius/active-sessions")).data,
     });
-    
+
     const { data: highUsage, isLoading: loadingHighUsage } = useQuery({
         queryKey: ["highUsage"],
         queryFn: async () => (await api.get("/radius/high-usage")).data,
     });
-    
+
     const { data: frequentFailures, isLoading: loadingFrequentFailures } = useQuery({
         queryKey: ["frequentFailures"],
         queryFn: async () => (await api.get("/radius/frequent-failures")).data,
@@ -68,13 +73,17 @@ const NetworkDashboard = () => {
                         <Card className="shadow-sm">
                             <Card.Body>
                                 <Card.Title>Users</Card.Title>
-                                <ul className="list-group list-group-flush">
-                                    {users?.slice(0, 5).map((user) => (
-                                        <li key={user.id} className="list-group-item">
-                                            {user.username} - {user.mobilephone}
-                                        </li>
-                                    ))}
-                                </ul>
+                                {users?.length > 0 ? (
+                                    <ul className="list-group list-group-flush">
+                                        {users.slice(0, 5).map((user) => (
+                                            <li key={user.id} className="list-group-item">
+                                                {user.username} - {user.mobilephone}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <Alert variant="warning">No users available</Alert>
+                                )}
                             </Card.Body>
                         </Card>
                     </Col>
@@ -84,13 +93,17 @@ const NetworkDashboard = () => {
                         <Card className="shadow-sm">
                             <Card.Body>
                                 <Card.Title>Recent Auth Logs</Card.Title>
-                                <ul className="list-group list-group-flush">
-                                    {authLogs?.slice(0, 5).map((log, index) => (
-                                        <li key={index} className="list-group-item">
-                                            {log.username} - {log.authdate}
-                                        </li>
-                                    ))}
-                                </ul>
+                                {authLogs?.length > 0 ? (
+                                    <ul className="list-group list-group-flush">
+                                        {authLogs.slice(0, 5).map((log, index) => (
+                                            <li key={index} className="list-group-item">
+                                                {log.username} - {log.authdate}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <Alert variant="warning">No authentication logs available</Alert>
+                                )}
                             </Card.Body>
                         </Card>
                     </Col>
@@ -100,13 +113,17 @@ const NetworkDashboard = () => {
                         <Card className="shadow-sm">
                             <Card.Body>
                                 <Card.Title>Active Sessions</Card.Title>
-                                <ul className="list-group list-group-flush">
-                                    {activeSessions?.slice(0, 5).map((session, index) => (
-                                        <li key={index} className="list-group-item">
-                                            {session.username} - Active
-                                        </li>
-                                    ))}
-                                </ul>
+                                {activeSessions?.length > 0 ? (
+                                    <ul className="list-group list-group-flush">
+                                        {activeSessions.slice(0, 5).map((session, index) => (
+                                            <li key={index} className="list-group-item">
+                                                {session.username} - Active
+                                            </li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <Alert variant="warning">No active sessions</Alert>
+                                )}
                             </Card.Body>
                         </Card>
                     </Col>
@@ -116,7 +133,11 @@ const NetworkDashboard = () => {
                         <Card className="shadow-sm">
                             <Card.Body>
                                 <Card.Title>High Data Usage</Card.Title>
-                                <Bar data={chartData} />
+                                {highUsage?.length > 0 ? (
+                                    <Bar data={chartData} />
+                                ) : (
+                                    <Alert variant="warning">No high usage data available</Alert>
+                                )}
                             </Card.Body>
                         </Card>
                     </Col>
@@ -126,13 +147,17 @@ const NetworkDashboard = () => {
                         <Card className="shadow-sm">
                             <Card.Body>
                                 <Card.Title>Frequent Failures</Card.Title>
-                                <ul className="list-group list-group-flush">
-                                    {frequentFailures?.map((fail, index) => (
-                                        <li key={index} className="list-group-item">
-                                            {fail.username} - {fail.attempts} failed attempts
-                                        </li>
-                                    ))}
-                                </ul>
+                                {frequentFailures?.length > 0 ? (
+                                    <ul className="list-group list-group-flush">
+                                        {frequentFailures.map((fail, index) => (
+                                            <li key={index} className="list-group-item">
+                                                {fail.username} - {fail.attempts} failed attempts
+                                            </li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <Alert variant="warning">No frequent failures recorded</Alert>
+                                )}
                             </Card.Body>
                         </Card>
                     </Col>

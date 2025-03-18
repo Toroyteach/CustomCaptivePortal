@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, UseGuards, Request, Patch, Body, Param, ParseIntPipe, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, UseGuards, Request, Patch, Body, Param, ParseIntPipe, NotFoundException, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { User, UserRole } from './entity/user.entity';
@@ -63,8 +63,11 @@ export class UsersController {
     // Get all customers
     @Get('customers/getAll')
     @UseGuards(JwtAuthGuard)
-    async getCustomers(): Promise<UserInfo[]> {
-        return this.usersService.getAllCustomers();
+    async getCustomers(
+        @Query('page') page: number = 1,
+        @Query('limit') limit: number = 50
+    ): Promise<{ customers: UserInfo[]; total: number; page: number; limit: number }> {
+        return this.usersService.getAllCustomers(page, limit);
     }
 
     // Get a single customer by ID

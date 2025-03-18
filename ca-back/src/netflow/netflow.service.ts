@@ -13,7 +13,7 @@ export class NetflowService {
     @InjectRepository(RadCheckModel) private radCheckRepo: Repository<RadCheckModel>,
     @InjectRepository(RadPostAuthModel) private radPostAuthRepo: Repository<RadPostAuthModel>,
     @InjectRepository(RadAcctModel) private radAcctRepo: Repository<RadAcctModel>,
-  ) {}
+  ) { }
 
   async getUsers() {
     return this.userInfoRepo.find();
@@ -46,11 +46,12 @@ export class NetflowService {
   async getFrequentFailures() {
     return this.radPostAuthRepo
       .createQueryBuilder('radpostauth')
-      .select('username, COUNT(*) as attempts')
-      .where('reply = :reply', { reply: 'Access-Reject' })
-      .groupBy('username')
+      .select('radpostauth.username', 'username')
+      .addSelect('COUNT(*)', 'attempts')
+      .where('radpostauth.reply = :reply', { reply: 'Access-Reject' })
+      .groupBy('radpostauth.username')
       .having('COUNT(*) > 5')
-      .orderBy('attempts', 'DESC')
+      .orderBy('MAX(radpostauth.authdate)', 'DESC')
       .getRawMany();
   }
 }

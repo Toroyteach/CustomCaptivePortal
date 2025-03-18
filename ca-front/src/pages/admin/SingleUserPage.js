@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, Button, Spinner, Container, Row, Col, Alert } from "react-bootstrap";
 import api from "../../utils/api";
 import { useAuth } from "../../context/AuthProvider";
+import NavigationBar from "../../components/Navbar";
 
 const SingleUserPage = () => {
   const { id } = useParams();
@@ -45,29 +46,34 @@ const SingleUserPage = () => {
     );
 
   return (
-    <Container className="py-4">
-      <Row className="justify-content-center">
-        <Col md={8} lg={6}>
-          <Card className="shadow-sm">
-            <Card.Body>
-              <Card.Title className="mb-3">User Details</Card.Title>
-              <p><strong>Name:</strong> {user.username}</p>
-              <p><strong>Role:</strong> {user.role}</p>
-              <div className="d-flex justify-content-between mt-4">
-                <Button variant="secondary" onClick={() => navigate("/users")}>
-                  Back to Users
-                </Button>
-                {currentUser?.id !== user.id && (
-                  <Button variant="danger" onClick={() => deleteUser.mutate()}>
-                    Delete User
+    <div className="container-fluid">
+      {/* Sidebar */}
+      <NavigationBar />
+
+      <Container className="py-4">
+        <Row className="justify-content-center">
+          <Col md={8} lg={6}>
+            <Card className="shadow-sm">
+              <Card.Body>
+                <Card.Title className="mb-3">User Details</Card.Title>
+                <p><strong>Name:</strong> {user.username}</p>
+                <p><strong>Role:</strong> {user.role}</p>
+                <div className="d-flex justify-content-between mt-4">
+                  <Button variant="secondary" onClick={() => navigate("/users")}>
+                    Back to Users
                   </Button>
-                )}
-              </div>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
+                  {currentUser?.id !== user.id && (
+                    <Button variant="danger" onClick={() => deleteUser.mutate()}>
+                      Delete User
+                    </Button>
+                  )}
+                </div>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
+    </div>
   );
 };
 
