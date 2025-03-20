@@ -41,7 +41,6 @@ export class AuthController {
   }
 
   @Post('register')
-  @UseGuards(JwtAuthGuard)
   async register(@Body() body: any) {
     return this.authService.register(body);
   }

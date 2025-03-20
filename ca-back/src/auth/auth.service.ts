@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, BadRequestException, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
@@ -20,6 +20,8 @@ export class AuthService {
         private jwtService: JwtService,
         @InjectRepository(RadCheckModel)
         private radCheckRepository: Repository<RadCheckModel>,
+        @InjectRepository(UserInfo)
+        private userInfoRepository: Repository<UserInfo>
     ) { }
 
     async validateUser(username: string, pass: string): Promise<any> {
@@ -53,80 +55,75 @@ export class AuthService {
 
         const regDate = new Date();
 
-        // Set default values
         registrationData.username = phone;
         registrationData.mobilephone = phone;
         registrationData.creationby = 'administrator';
         registrationData.created_at = regDate;
         registrationData.updated_at = regDate;
 
-        const password = Math.random().toString(36).slice(-8);
+        try {
+            await this.userInfoRepository.save(registrationData);
 
-        // Save user info
-        const userInfo = await this.usersService.createUserInfo(registrationData);
+            const existing = await this.radCheckRepository.findOne({ where: { username: phone } });
+            const password = Math.random().toString(36).slice(-8);
+            const expiryDate = new Date(Date.now() + 8 * 60 * 60 * 1000);
 
-        // Check if user exists in RadCheck
-        let rad = await this.radCheckRepository.findOne({ where: { username: phone } });
+            let rad: RadCheckModel;
+            if (existing) {
+                existing.value = password;
+                existing.expired = false;
+                existing.expiryDate = expiryDate;
+                rad = existing;
+            } else {
+                rad = this.radCheckRepository.create({
+                    username: phone,
+                    value: password,
+                    op: ':=',
+                    attribute: 'Cleartext-Password',
+                    expired: false,
+                    expiryDate,
+                });
+            }
 
-        if (!rad) {
-            rad = this.radCheckRepository.create({
-                username: phone,
-                value: password,
-                expired: false,
-                expiryDate: new Date(Date.now() + 8 * 60 * 60 * 1000),
-            });
-        } else {
-            rad.value = password;
-            rad.expired = false;
-            rad.expiryDate = new Date(Date.now() + 8 * 60 * 60 * 1000);
+            await this.radCheckRepository.save(rad);
+
+            const message = `Your registration is successful. Your login password is: ${password}`;
+            await this.smsService.send(phone, message);
+
+            return { success: true, message: "Registration successful!", username: phone };
+        } catch (error) {
+            throw new InternalServerErrorException("Registration failed. Please try again.");
         }
-
-        await this.radCheckRepository.save(rad);
-
-        // Fix: Send SMS with generated password
-        const message = `Your registration is successful. Your login password is: ${password}`;
-        await this.smsService.send(phone, message);
-
-        // Return created user info along with rad check data
-        return { userInfo, rad };
     }
 
     async recover(registrationData: Partial<UserInfo>) {
         const phone = registrationData.mobilephone;
 
         if (!phone) {
-            throw new BadRequestException(
-                `At least one phone number must be provided`,
-            );
+            throw new BadRequestException(`At least one phone number must be provided`);
         }
 
-        const existing = await this.radCheckRepository.findOne({
-            where: {
-                username: phone,
-            },
-        });
+        const existing = await this.radCheckRepository.findOne({ where: { username: phone } });
 
         if (!existing) {
-            return {
-                error: 'not found',
-                message: `Could not find a user with phone number ${phone}`,
-            };
+            throw new NotFoundException(`Could not find a user with phone number ${phone}`);
         }
 
-        const password = chance.word({ length: 6 });
-        const current = new Date();
-        const expiryDate = new Date(current.getTime() + 60 * 60 * 1000 * 8);
+        try {
+            const password = chance.word({ length: 6 });
+            const expiryDate = new Date(Date.now() + 8 * 60 * 60 * 1000);
 
-        existing.value = password;
-        existing.expired = false;
-        existing.expiryDate = expiryDate;
+            existing.value = password;
+            existing.expired = false;
+            existing.expiryDate = expiryDate;
 
-        this.radCheckRepository.save(existing);
+            await this.radCheckRepository.save(existing);
+            const message = `Network Login Details: Username: ${existing.username}, Password: ${password}`;
+            await this.smsService.send(phone, message);
 
-        // Fix: Send SMS with new login details
-        const message = `Network Login Details: Username: ${existing.username}, Password: ${password}`;
-        await this.smsService.send(phone, message);
-
-        return existing;
+            return { success: true, message: "Recovery successful! Check SMS for details." };
+        } catch (error) {
+            throw new InternalServerErrorException("Recovery failed. Please try again.");
+        }
     }
 }
