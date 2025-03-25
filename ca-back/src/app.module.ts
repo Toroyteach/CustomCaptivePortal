@@ -31,7 +31,7 @@ import { CaptivelinkModule } from './captivelink/captivelink.module';
         port: +configService.get<number>('DB_PORT'),
         username: configService.get('DB_USER'),
         password: configService.get('DB_PASSWORD'),
-        database: configService.get('DB_NAME'),
+        database: configService.get('DB_DATABASE'),
         entities: [User, UserInfo, RadCheckModel, MessageLogModel, RadPostAuthModel, RadAcctModel],
         // synchronize: true, // TODO: Disable in production
         // dropSchema: true,// TODO: Remove in production
