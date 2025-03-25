@@ -26,8 +26,8 @@ export class CaptivePortalService {
         }
 
         // Store visitor details in `userinfo`
-        const userInfo = this.userInfoRepo.create({ mobilephone, email, username, hostEmail });
-        await this.userInfoRepo.save(userInfo);
+        // const userInfo = this.userInfoRepo.create({ mobilephone, email, username, hostEmail });
+        // await this.userInfoRepo.save(userInfo);
 
         // Generate approval token
         const token = Math.random().toString(36).substring(7);

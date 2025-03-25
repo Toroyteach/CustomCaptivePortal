@@ -27,13 +27,13 @@ import { CaptivelinkModule } from './captivelink/captivelink.module';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'mysql',
-        host: configService.get('DATABASE_HOST'),
-        port: +configService.get<number>('DATABASE_PORT'),
-        username: configService.get('DATABASE_USER'),
-        password: configService.get('DATABASE_PASSWORD'),
-        database: configService.get('DATABASE_NAME'),
+        host: configService.get('DB_HOST'),
+        port: +configService.get<number>('DB_PORT'),
+        username: configService.get('DB_USER'),
+        password: configService.get('DB_PASSWORD'),
+        database: configService.get('DB_NAME'),
         entities: [User, UserInfo, RadCheckModel, MessageLogModel, RadPostAuthModel, RadAcctModel],
-        synchronize: true, // TODO: Disable in production
+        // synchronize: true, // TODO: Disable in production
         // dropSchema: true,// TODO: Remove in production
       }),
     }),
@@ -41,7 +41,6 @@ import { CaptivelinkModule } from './captivelink/captivelink.module';
     AuthModule,
     NotificationModule,
     NetflowModule,
-    CaptivelinkModule,
   ],
   controllers: [AppController],
   providers: [AppService],
