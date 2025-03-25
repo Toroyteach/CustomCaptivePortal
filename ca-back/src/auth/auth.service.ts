@@ -72,7 +72,7 @@ export class AuthService {
             if (existing) {
                 existing.value = password;
                 existing.expired = false;
-                existing.expiryDate = expiryDate;
+                existing.expiry_date = expiryDate;
                 rad = existing;
             } else {
                 rad = this.radCheckRepository.create({
@@ -81,7 +81,7 @@ export class AuthService {
                     op: ':=',
                     attribute: 'Cleartext-Password',
                     expired: false,
-                    expiryDate,
+                    expiry_date: expiryDate,
                 });
             }
 
@@ -115,7 +115,7 @@ export class AuthService {
 
             existing.value = password;
             existing.expired = false;
-            existing.expiryDate = expiryDate;
+            existing.expiry_date = expiryDate;
 
             await this.radCheckRepository.save(existing);
             const message = `Network Login Details: Username: ${existing.username}, Password: ${password}`;

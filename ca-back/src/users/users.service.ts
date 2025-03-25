@@ -95,7 +95,7 @@ export class UsersService {
             username: savedUser.mobilephone,
             value: password,
             expired: false,
-            expiryDate: new Date(Date.now() + 8 * 60 * 60 * 1000), // 8-hour expiry
+            expiry_date: new Date(Date.now() + 8 * 60 * 60 * 1000), // 8-hour expiry
         });
 
         await this.radCheckRepository.save(radCheck);

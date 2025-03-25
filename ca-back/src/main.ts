@@ -12,6 +12,7 @@ async function bootstrap() {
     origin: [
       'guestwifi.ca.go.ke',
       'guestwifiadmin.ca.go.ke',
+      'http://guestwifiadmin.ca.go.ke',
       'guestwifiapi.ca.go.ke',
       'guestwifiregister.ca.go.ke',
       '10.20.120.25',
@@ -23,8 +24,6 @@ async function bootstrap() {
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
-
-  app.setGlobalPrefix('api');
 
   await app.listen(config.port);
 }

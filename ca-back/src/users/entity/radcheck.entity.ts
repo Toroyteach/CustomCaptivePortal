@@ -19,7 +19,7 @@ export class RadCheckModel {
   value: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  expiryDate: Date;
+  expiry_date: Date;
 
   @Column({ type: 'tinyint', default: false })
   expired: boolean;

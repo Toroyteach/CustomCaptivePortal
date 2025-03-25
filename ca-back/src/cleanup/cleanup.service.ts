@@ -31,7 +31,7 @@ export class CleanupService {
 
         // Get all users whose expiry date is past and are not marked as expired
         const expiredUsers = await this.radCheckRepository.find({
-            where: { expired: false, expiryDate: LessThan(expiryDate) }
+            where: { expired: false, expiry_date: LessThan(expiryDate) }
         });
 
         if (expiredUsers.length === 0) {
