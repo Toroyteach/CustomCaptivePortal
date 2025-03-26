@@ -55,10 +55,10 @@ const Register = () => {
 
         try {
             const response = await axios.post(`${API_URL}/auth/register`, form);
-            setMessage(response.data.message || "Registration successful! Check your phone for login details.");
+            setMessage(response.data.message || "Registration successfull! Check your phone for login details.");
             setTimeout(() => {
-                window.location.href = "http://guestwifi.ca.go.ke/login";
-            }, 2000);
+                window.location.href = "http://guestwifi.ca.go.ke";
+            }, 1000);
         } catch (err) {
             setError(err.response?.data?.message || "Registration failed. Try again.");
         } finally {

@@ -148,6 +148,10 @@ export class UsersService {
         // Find and delete all UserInfo records with the same mobile phone number
         await this.usersInfoRepository.delete({ mobilephone: phone });
 
+        if(/^\d+$/.test(userData.username)){
+            await this.usersInfoRepository.delete({ username: userData.username });
+        }
+
         return { message: 'All related customer data deleted successfully' };
     }
 }

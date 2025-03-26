@@ -24,6 +24,9 @@ const Recover = () => {
         try {
             const response = await axios.post(`${API_URL}/auth/recover`, { mobilephone: phone });
             setMessage(response.data.message || "Recovery successful! Check SMS for details.");
+            setTimeout(() => {
+                window.location.href = "http://guestwifi.ca.go.ke";
+            }, 1000);
         } catch (err) {
             setError(err.response?.data?.message || "User not found. Try again.");
         }

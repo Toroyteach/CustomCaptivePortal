@@ -55,7 +55,6 @@ export class AuthService {
 
         const regDate = new Date();
 
-        registrationData.username = phone;
         registrationData.mobilephone = phone;
         registrationData.creationby = 'administrator';
         registrationData.creationdate = regDate;
