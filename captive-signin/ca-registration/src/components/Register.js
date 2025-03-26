@@ -15,7 +15,7 @@ const Register = () => {
     const [error, setError] = useState("");
     const navigate = useNavigate();
     // const API_URL = 'http://127.0.0.1:4000/api';
-    const API_URL = 'http://guestwifiapi.ca.go.ke/api';
+    const API_URL = 'http://guestwifiapi.ca.go.ke';
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;

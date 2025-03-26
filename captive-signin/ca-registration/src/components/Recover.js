@@ -10,7 +10,7 @@ const Recover = () => {
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
     // const API_URL = 'http://127.0.0.1:4000/api';
-        const API_URL = 'http://guestwifiapi.ca.go.ke/api';
+        const API_URL = 'http://guestwifiapi.ca.go.ke';
 
     const handleRecover = async (e) => {
         e.preventDefault();
