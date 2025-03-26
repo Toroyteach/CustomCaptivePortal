@@ -37,7 +37,7 @@ export class UsersController {
     }
 
     @Post()
-    // @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard)
     async create(@Body() body: { username: string; password: string; role: UserRole }) {
         return this.usersService.create(body.username, body.password, body.role);
     }

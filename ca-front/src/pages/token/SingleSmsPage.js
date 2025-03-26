@@ -60,7 +60,7 @@ const SingleSmsLog = () => {
                                             <p>{log.msg_message_text}</p>
                                             <hr />
                                             <p><strong>Sent At:</strong> {new Date(log.dateCreated).toLocaleString()}</p>
-                                            <p><strong>Token:</strong> {log.shortCode}</p>
+                                            <p><strong>Token:</strong> {log.text}</p>
                                         </Card.Body>
                                     </Card>
                                 </Col>

@@ -12,11 +12,11 @@ export class CaptivePortalController {
 
     @Get('approve/:token')
     async approveAccess(@Param('token') token: string) {
-        return this.captivePortalService.approveAccess(token);
+        // return this.captivePortalService.approveAccess(token);
     }
 
     @Get('reject/:token')
     async rejectAccess(@Param('token') token: string) {
-        return this.captivePortalService.rejectAccess(token);
+        // return this.captivePortalService.rejectAccess(token);
     }
 }

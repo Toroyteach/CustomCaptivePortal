@@ -81,8 +81,8 @@ export class UsersService {
         const currentDate = new Date();
         const userInfo = this.usersInfoRepository.create({
             ...userData,
-            created_at: currentDate,
-            updated_at: currentDate,
+            creationdate: currentDate,
+            updateDate: currentDate,
         });
 
         const savedUser = await this.usersInfoRepository.save(userInfo);
@@ -112,7 +112,7 @@ export class UsersService {
         const [customers, total] = await this.usersInfoRepository.findAndCount({
             skip: (page - 1) * limit,
             take: limit,
-            order: { created_at: 'DESC' },
+            order: { creationdate: 'DESC' },
         });
 
         return { customers, total, page, limit };
@@ -137,7 +137,7 @@ export class UsersService {
             throw new NotFoundException('User info not found');
         }
 
-        const phone = userData.mobilephone;
+        const phone = userData.mobilephone || (/^\d+$/.test(userData.username) ? userData.username : null);
         if (!phone) {
             throw new BadRequestException('At least one phone number must be provided');
         }

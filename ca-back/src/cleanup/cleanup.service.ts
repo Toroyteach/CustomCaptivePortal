@@ -18,7 +18,7 @@ export class CleanupService {
         threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
 
         const deleteResult = await this.userInfoRepository.delete({
-            created_at: LessThan(threeMonthsAgo),
+            creationdate: LessThan(threeMonthsAgo),
         });
     }
 

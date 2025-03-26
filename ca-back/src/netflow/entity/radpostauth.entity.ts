@@ -8,15 +8,11 @@ export class RadPostAuthModel {
   @Column({ type: 'varchar', length: 64 })
   username: string;
 
-  @Column({ type: 'varchar', length: 64, nullable: true })
-  password: string;
-
   @Column({ type: 'varchar', length: 16 })
   reply: string; // "Access-Accept" or "Access-Reject"
 
   @Column({ type: 'varchar', length: 50, nullable: true })
   authdate: Date; // Timestamp of authentication
 
-  @Column({ type: 'varchar', length: 64, nullable: true })
-  nasipaddress: string; // The IP address of the NAS (network access server)
+  
 }

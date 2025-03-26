@@ -40,7 +40,7 @@ export class NetflowService {
   }
 
   async getHighUsageUsers() {
-    return this.radAcctRepo.find({ where: { acctoutputoctets: MoreThan(1000000000) }, order: { acctoutputoctets: 'DESC' } });
+    return this.radAcctRepo.find({ where: { acctoutputoctets: MoreThan(10000000) }, order: { acctoutputoctets: 'DESC' } });
   }
 
   async getFrequentFailures() {

@@ -58,8 +58,8 @@ export class AuthService {
         registrationData.username = phone;
         registrationData.mobilephone = phone;
         registrationData.creationby = 'administrator';
-        registrationData.created_at = regDate;
-        registrationData.updated_at = regDate;
+        registrationData.creationdate = regDate;
+        registrationData.updateDate = regDate;
 
         try {
             await this.userInfoRepository.save(registrationData);

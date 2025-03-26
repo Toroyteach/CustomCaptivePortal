@@ -50,34 +50,34 @@ export class CaptivePortalService {
         return { message: 'Request submitted. Awaiting host approval.' };
     }
 
-    async approveAccess(token: string) {
-        const request = await this.userInfoRepo.findOne({ where: { token } });
+    // async approveAccess(token: string) {
+    //     const request = await this.userInfoRepo.findOne({ where: { token } });
 
-        if (!request) throw new Error('Invalid or expired token');
+    //     if (!request) throw new Error('Invalid or expired token');
 
-        // Move user to `radcheck`
-        await this.radCheckRepo.save({
-            username: request.mobilephone,
-            attribute: 'Cleartext-Password',
-            op: ':=',
-            value: Math.random().toString(36).substring(8),
-        });
+    //     // Move user to `radcheck`
+    //     await this.radCheckRepo.save({
+    //         username: request.mobilephone,
+    //         attribute: 'Cleartext-Password',
+    //         op: ':=',
+    //         value: Math.random().toString(36).substring(8),
+    //     });
 
-        // Log approval & delete request
-        this.logger.log(`Access granted to ${request.mobilephone}`);
-        await this.userInfoRepo.delete(request.id);
+    //     // Log approval & delete request
+    //     this.logger.log(`Access granted to ${request.mobilephone}`);
+    //     await this.userInfoRepo.delete(request.id);
 
-        return { message: 'Access granted successfully' };
-    }
+    //     return { message: 'Access granted successfully' };
+    // }
 
-    async rejectAccess(token: string) {
-        const request = await this.userInfoRepo.findOne({ where: { token } });
+    // async rejectAccess(token: string) {
+    //     const request = await this.userInfoRepo.findOne({ where: { token } });
 
-        if (!request) throw new Error('Invalid or expired token');
+    //     if (!request) throw new Error('Invalid or expired token');
 
-        this.logger.log(`Access denied to ${request.mobilephone}`);
-        await this.userInfoRepo.delete(request.id);
+    //     this.logger.log(`Access denied to ${request.mobilephone}`);
+    //     await this.userInfoRepo.delete(request.id);
 
-        return { message: 'Access denied' };
-    }
+    //     return { message: 'Access denied' };
+    // }
 }

@@ -55,8 +55,7 @@ const SingleCustomerPage = () => {
                         <Card.Text><strong>Name:</strong> {customer.username || "N/A"}</Card.Text>
                         <Card.Text><strong>Phone:</strong> {customer.mobilephone || "N/A"}</Card.Text>
                         <Card.Text><strong>Email:</strong> {customer.email}</Card.Text>
-                        <Card.Text><strong>Host Email:</strong> {customer.hostEmail}</Card.Text>
-                        <Card.Text><strong>Created At:</strong> {new Date(customer.created_at).toLocaleString()}</Card.Text>
+                        <Card.Text><strong>Created At:</strong> {new Date(customer.creationdate).toLocaleString()}</Card.Text>
                         <div className="d-flex justify-content-between">
                             <Button variant="secondary" onClick={() => navigate("/customers")}>Back</Button>
                             <Button variant="danger" onClick={handleDelete}>Delete Customer</Button>

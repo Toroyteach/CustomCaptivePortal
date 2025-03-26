@@ -45,7 +45,7 @@ const NetworkDashboard = () => {
     ];
 
     const table = useReactTable({
-        data: frequentFailures?.frequentFailures || [],
+        data: frequentFailures || [],
         columns,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
@@ -157,57 +157,57 @@ const NetworkDashboard = () => {
 
                     {/* Frequent Failures */}
                     <Col md={6} lg={6}>
-                    <>
-    {/* Page Size Selector */}
-    <Form.Select
-        value={pageSize}
-        onChange={(e) => setPageSize(Number(e.target.value))}
-        className="mb-2"
-        style={{ width: "150px" }}
-    >
-        <option value={10}>Show 10</option>
-        <option value={20}>Show 20</option>
-    </Form.Select>
+                        <>
+                            {/* Page Size Selector */}
+                            <Form.Select
+                                value={pageSize}
+                                onChange={(e) => setPageSize(Number(e.target.value))}
+                                className="mb-2"
+                                style={{ width: "150px" }}
+                            >
+                                <option value={10}>Show 10</option>
+                                <option value={20}>Show 20</option>
+                            </Form.Select>
 
-    {/* Scrollable Table */}
-    <div className="table-responsive overflow-auto" style={{ maxHeight: "400px" }}>
-        <table className="table table-striped table-bordered table-hover">
-            <thead className="table-dark">
-                {table.getHeaderGroups().map((headerGroup) => (
-                    <tr key={headerGroup.id}>
-                        {headerGroup.headers.map((header) => (
-                            <th key={header.id}>
-                                {flexRender(header.column.columnDef.header, header.getContext())}
-                            </th>
-                        ))}
-                    </tr>
-                ))}
-            </thead>
-            <tbody>
-                {table.getRowModel().rows.map((row) => (
-                    <tr key={row.id}>
-                        {row.getVisibleCells().map((cell) => (
-                            <td key={cell.id}>
-                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                            </td>
-                        ))}
-                    </tr>
-                ))}
-            </tbody>
-        </table>
-    </div>
+                            {/* Scrollable Table */}
+                            <div className="table-responsive overflow-auto" style={{ maxHeight: "400px" }}>
+                                <table className="table table-striped table-bordered table-hover">
+                                    <thead className="table-dark">
+                                        {table.getHeaderGroups().map((headerGroup) => (
+                                            <tr key={headerGroup.id}>
+                                                {headerGroup.headers.map((header) => (
+                                                    <th key={header.id}>
+                                                        {flexRender(header.column.columnDef.header, header.getContext())}
+                                                    </th>
+                                                ))}
+                                            </tr>
+                                        ))}
+                                    </thead>
+                                    <tbody>
+                                        {table.getRowModel().rows.map((row) => (
+                                            <tr key={row.id}>
+                                                {row.getVisibleCells().map((cell) => (
+                                                    <td key={cell.id}>
+                                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                    </td>
+                                                ))}
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
 
-    {/* Pagination Controls */}
-    <div className="d-flex justify-content-between align-items-center mt-3">
-        <Button onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()} variant="secondary" size="sm">
-            Previous
-        </Button>
-        <span>Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}</span>
-        <Button onClick={() => table.nextPage()} disabled={!table.getCanNextPage()} variant="secondary" size="sm">
-            Next
-        </Button>
-    </div>
-</>
+                            {/* Pagination Controls */}
+                            <div className="d-flex justify-content-between align-items-center mt-3">
+                                <Button onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()} variant="secondary" size="sm">
+                                    Previous
+                                </Button>
+                                <span>Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}</span>
+                                <Button onClick={() => table.nextPage()} disabled={!table.getCanNextPage()} variant="secondary" size="sm">
+                                    Next
+                                </Button>
+                            </div>
+                        </>
                     </Col>
                 </Row>
             </Container>

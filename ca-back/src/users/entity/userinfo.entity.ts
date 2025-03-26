@@ -70,9 +70,6 @@ export class UserInfo {
   @IsString(AsEither)
   email?: string
 
-  @Column({ nullable: true })
-  token: string;
-
   @Column({ name: 'address', nullable: true, length: 200 })
   @MaxLength(200)
   @IsOptional()
@@ -126,9 +123,6 @@ export class UserInfo {
   @IsNumber()
   enablePortalLogin?: number;
 
-  @CreateDateColumn({ type: 'timestamp' })
-  created_at: Date;
-
   @Column({ name: 'creationdate', nullable: true, type: 'datetime' })
   @IsOptional()
   @IsDate()
@@ -150,7 +144,4 @@ export class UserInfo {
   @IsOptional()
   @IsDate()
   updateDate?: any;
-
-  @UpdateDateColumn({ type: 'timestamp' })
-  updated_at: Date;
 }
