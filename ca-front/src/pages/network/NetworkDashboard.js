@@ -1,14 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import api from "../../utils/api";
 import { Bar } from "react-chartjs-2";
 import "chart.js/auto";
 import {
-    Card, Spinner, Container, Row, Col,
-
-
-    Alert
+    Card, Spinner, Container, Row, Col, Alert, Form, Button,
 } from "react-bootstrap";
+import { useReactTable, getCoreRowModel, flexRender, getPaginationRowModel } from "@tanstack/react-table";
 import NavigationBar from "../../components/Navbar";
 
 const NetworkDashboard = () => {
@@ -36,6 +34,21 @@ const NetworkDashboard = () => {
     const { data: frequentFailures, isLoading: loadingFrequentFailures } = useQuery({
         queryKey: ["frequentFailures"],
         queryFn: async () => (await api.get("/radius/frequent-failures")).data,
+    });
+
+    const [pageSize, setPageSize] = useState(10); // Default page size
+
+    const columns = [
+        { accessorKey: "id", header: "ID" },
+        { accessorKey: "username", header: "Username" },
+        { accessorKey: "attempts", header: "Failed Attempts" },
+    ];
+
+    const table = useReactTable({
+        data: frequentFailures?.frequentFailures || [],
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
     });
 
     if (loadingUsers || loadingAuthLogs || loadingActiveSessions || loadingHighUsage || loadingFrequentFailures) {
@@ -143,23 +156,58 @@ const NetworkDashboard = () => {
                     </Col>
 
                     {/* Frequent Failures */}
-                    <Col md={6} lg={4}>
-                        <Card className="shadow-sm">
-                            <Card.Body>
-                                <Card.Title>Frequent Failures</Card.Title>
-                                {frequentFailures?.length > 0 ? (
-                                    <ul className="list-group list-group-flush">
-                                        {frequentFailures.map((fail, index) => (
-                                            <li key={index} className="list-group-item">
-                                                {fail.username} - {fail.attempts} failed attempts
-                                            </li>
-                                        ))}
-                                    </ul>
-                                ) : (
-                                    <Alert variant="warning">No frequent failures recorded</Alert>
-                                )}
-                            </Card.Body>
-                        </Card>
+                    <Col md={6} lg={6}>
+                    <>
+    {/* Page Size Selector */}
+    <Form.Select
+        value={pageSize}
+        onChange={(e) => setPageSize(Number(e.target.value))}
+        className="mb-2"
+        style={{ width: "150px" }}
+    >
+        <option value={10}>Show 10</option>
+        <option value={20}>Show 20</option>
+    </Form.Select>
+
+    {/* Scrollable Table */}
+    <div className="table-responsive overflow-auto" style={{ maxHeight: "400px" }}>
+        <table className="table table-striped table-bordered table-hover">
+            <thead className="table-dark">
+                {table.getHeaderGroups().map((headerGroup) => (
+                    <tr key={headerGroup.id}>
+                        {headerGroup.headers.map((header) => (
+                            <th key={header.id}>
+                                {flexRender(header.column.columnDef.header, header.getContext())}
+                            </th>
+                        ))}
+                    </tr>
+                ))}
+            </thead>
+            <tbody>
+                {table.getRowModel().rows.map((row) => (
+                    <tr key={row.id}>
+                        {row.getVisibleCells().map((cell) => (
+                            <td key={cell.id}>
+                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                            </td>
+                        ))}
+                    </tr>
+                ))}
+            </tbody>
+        </table>
+    </div>
+
+    {/* Pagination Controls */}
+    <div className="d-flex justify-content-between align-items-center mt-3">
+        <Button onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()} variant="secondary" size="sm">
+            Previous
+        </Button>
+        <span>Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}</span>
+        <Button onClick={() => table.nextPage()} disabled={!table.getCanNextPage()} variant="secondary" size="sm">
+            Next
+        </Button>
+    </div>
+</>
                     </Col>
                 </Row>
             </Container>

@@ -19,7 +19,7 @@ const SmsBalance = () => {
         ) : isError ? (
           <Alert variant="danger">Failed to load SMS balance.</Alert>
         ) : (
-          <h4 className="text-success fw-bold">{balance.balance} Remaining</h4>
+          <h4 className="text-success fw-bold">{balance.data.credit_balance} Remaining</h4>
         )}
       </Card.Body>
     </Card>

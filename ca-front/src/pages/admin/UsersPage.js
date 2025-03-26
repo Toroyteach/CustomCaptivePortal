@@ -28,8 +28,6 @@ const UsersPage = () => {
   }, [data]);
 
 
-  console.log(data)
-
   return (
     <div className="container-fluid">
       {/* Sidebar */}

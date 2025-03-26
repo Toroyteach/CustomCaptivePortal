@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  // baseURL: "http://localhost:4000/api", // API Endpoint
+  // baseURL: "http://localhost:4000/", // API Endpoint
   baseURL: "http://guestwifiapi.ca.go.ke",
 });
 
