@@ -94,7 +94,7 @@ const Register = () => {
             </Form>
             <div className="mt-3 d-flex justify-content-between w-50">
                 <Button variant="link" onClick={() => navigate("/privacy-policy")}>Privacy Policy</Button>
-                <Button variant="outline-secondary" onClick={() => navigate("/recover")}>Already Registere?</Button>
+                <Button variant="outline-secondary" onClick={() => navigate("/recover")}>Already Register?</Button>
             </div>
         </Container>
     );
