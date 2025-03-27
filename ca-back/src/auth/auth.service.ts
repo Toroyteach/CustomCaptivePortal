@@ -86,7 +86,7 @@ export class AuthService {
 
             await this.radCheckRepository.save(rad);
 
-            const message = `Your registration is successful. Your login password is: ${password}`;
+            const message = `Your registration is successful. your Username is ${phone}  and Your login password is: ${password}`;
             await this.smsService.send(phone, message);
 
             return { success: true, message: "Registration successful!", username: phone };

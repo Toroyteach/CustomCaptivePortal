@@ -58,7 +58,7 @@ const Register = () => {
             setMessage(response.data.message || "Registration successfull! Check your phone for login details.");
             setTimeout(() => {
                 window.location.href = "http://guestwifi.ca.go.ke";
-            }, 1000);
+            }, 2000);
         } catch (err) {
             setError(err.response?.data?.message || "Registration failed. Try again.");
         } finally {
@@ -74,7 +74,7 @@ const Register = () => {
             {error && <Alert variant="danger">{error}</Alert>}
             <Form onSubmit={handleSubmit} className="w-50">
                 <Form.Group className="mb-2">
-                    <Form.Label>Username</Form.Label>
+                    <Form.Label>Fullname</Form.Label>
                     <Form.Control type="text" name="username" value={form.username} onChange={handleChange} required />
                 </Form.Group>
                 <Form.Group className="mb-2">
@@ -94,7 +94,7 @@ const Register = () => {
             </Form>
             <div className="mt-3 d-flex justify-content-between w-50">
                 <Button variant="link" onClick={() => navigate("/privacy-policy")}>Privacy Policy</Button>
-                <Button variant="outline-secondary" onClick={() => navigate("/recover")}>Already Registere? Recover Account</Button>
+                <Button variant="outline-secondary" onClick={() => navigate("/recover")}>Already Registere?</Button>
             </div>
         </Container>
     );

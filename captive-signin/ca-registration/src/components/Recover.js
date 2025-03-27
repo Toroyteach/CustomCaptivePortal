@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Container, Form, Button, Alert } from "react-bootstrap";
+import { Container, Form, Button, Alert, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -9,8 +9,9 @@ const Recover = () => {
     const [privacyChecked, setPrivacyChecked] = useState(false);
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
     // const API_URL = 'http://127.0.0.1:4000/api';
-        const API_URL = 'http://guestwifiapi.ca.go.ke';
+    const API_URL = 'http://guestwifiapi.ca.go.ke';
 
     const handleRecover = async (e) => {
         e.preventDefault();
@@ -20,15 +21,18 @@ const Recover = () => {
         }
         setError("");
         setMessage("");
+        setLoading(true);
 
         try {
             const response = await axios.post(`${API_URL}/auth/recover`, { mobilephone: phone });
             setMessage(response.data.message || "Recovery successful! Check SMS for details.");
             setTimeout(() => {
                 window.location.href = "http://guestwifi.ca.go.ke";
-            }, 1000);
+            }, 2000);
         } catch (err) {
             setError(err.response?.data?.message || "User not found. Try again.");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -46,7 +50,9 @@ const Recover = () => {
                 <Form.Group className="mb-3">
                     <Form.Check type="checkbox" label="I agree to the Privacy Policy" checked={privacyChecked} onChange={(e) => setPrivacyChecked(e.target.checked)} />
                 </Form.Group>
-                <Button type="submit" variant="primary" className="w-100">Recover</Button>
+                <Button type="submit" variant="primary" className="w-100" disabled={loading}>
+                    {loading ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : "Recover"}
+                </Button>
             </Form>
             <div className="mt-3 d-flex justify-content-between w-50">
                 <Button variant="link" onClick={() => navigate("/privacy-policy")}>Privacy Policy</Button>
