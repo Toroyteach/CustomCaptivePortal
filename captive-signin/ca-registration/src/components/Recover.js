@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { Container, Form, Button, Alert, Spinner } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 
 const Recover = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+    const params = new URLSearchParams(location.search);
     const [phone, setPhone] = useState("");
     const [privacyChecked, setPrivacyChecked] = useState(false);
     const [message, setMessage] = useState("");
@@ -24,10 +26,10 @@ const Recover = () => {
         setLoading(true);
 
         try {
-            const response = await axios.post(`${API_URL}/auth/recover`, { mobilephone: phone });
-            setMessage(response.data.message || "Recovery successful! Check SMS for details.");
+            await axios.post(`${API_URL}/auth/recover`, { mobilephone: phone });
+            setMessage("Registration successfull! Check your phone for login details.");
             setTimeout(() => {
-                window.location.href = "http://guestwifi.ca.go.ke";
+                window.location.href = `http://guestwifi.ca.go.ke?${params.toString()}`;
             }, 2000);
         } catch (err) {
             setError(err.response?.data?.message || "User not found. Try again.");
@@ -37,26 +39,36 @@ const Recover = () => {
     };
 
     return (
-        <Container className="d-flex flex-column align-items-center justify-content-center vh-100">
-            <img src="/logo.svg" alt="CA Kenya" width={500} className="mb-3" />
-            <h2>Recover Account</h2>
-            {message && <Alert variant="success">{message}</Alert>}
-            {error && <Alert variant="danger">{error}</Alert>}
-            <Form onSubmit={handleRecover} className="w-50">
+        <Container fluid className="d-flex flex-column align-items-center justify-content-center vh-100 p-3">
+            <img
+                src="/logo.svg"
+                alt="CA Kenya"
+                className="mb-3"
+                style={{ width: "250px", height: "auto", objectFit: "contain" }}
+            />
+            <h2 className="text-center">Recover Account</h2>
+
+            {message && <Alert variant="success" className="w-100 text-center">{message}</Alert>}
+            {error && <Alert variant="danger" className="w-100 text-center">{error}</Alert>}
+
+            <Form onSubmit={handleRecover} className="w-100" style={{ maxWidth: "400px" }}>
                 <Form.Group className="mb-3">
                     <Form.Label>Mobile Phone</Form.Label>
                     <Form.Control type="text" value={phone} onChange={(e) => setPhone(e.target.value)} required />
                 </Form.Group>
+
                 <Form.Group className="mb-3">
                     <Form.Check type="checkbox" label="I agree to the Privacy Policy" checked={privacyChecked} onChange={(e) => setPrivacyChecked(e.target.checked)} />
                 </Form.Group>
-                <Button type="submit" variant="primary" className="w-100" disabled={loading}>
+
+                <Button type="submit" variant="primary" className="w-100 mb-2" disabled={loading}>
                     {loading ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : "Recover"}
                 </Button>
             </Form>
-            <div className="mt-3 d-flex justify-content-between w-50">
-                <Button variant="link" onClick={() => navigate("/privacy-policy")}>Privacy Policy</Button>
-                <Button variant="outline-secondary" onClick={() => navigate("/register")}>Register</Button>
+
+            <div className="mt-3 d-flex flex-column align-items-center w-100" style={{ maxWidth: "400px" }}>
+                <Button variant="link" onClick={() => navigate("/privacy-policy")} className="w-100">Privacy Policy</Button>
+                <Button variant="outline-secondary" onClick={() => navigate("/register")} className="w-100 mt-2">Register</Button>
             </div>
         </Container>
     );
