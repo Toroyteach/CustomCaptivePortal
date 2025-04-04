@@ -46,7 +46,7 @@ const Recover = () => {
                 className="mb-3"
                 style={{ width: "250px", height: "auto", objectFit: "contain" }}
             />
-            <h2 className="text-center">Recover Account</h2>
+            <h2 className="text-center">Request Token</h2>
 
             {message && <Alert variant="success" className="w-100 text-center">{message}</Alert>}
             {error && <Alert variant="danger" className="w-100 text-center">{error}</Alert>}
