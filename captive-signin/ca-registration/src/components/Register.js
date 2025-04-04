@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Container, Form, Button, Alert, Spinner } from "react-bootstrap";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useQueryParams } from "../context/QueryContext";
 
 const Register = () => {
-    const location = useLocation();
-    const params = new URLSearchParams(location.search);
+    const queryParams = useQueryParams();
     const [form, setForm] = useState({
         username: "",
         mobilephone: "",
@@ -58,8 +58,11 @@ const Register = () => {
         try {
             await axios.post(`${API_URL}/auth/register`, form);
             setMessage("Registration successfull! Check your phone for login details.");
+            const queryString = new URLSearchParams(queryParams).toString();
+            const redirectUrl = `http://guestwifi.ca.go.ke?${queryString}`;
+
             setTimeout(() => {
-                window.location.href = `http://guestwifi.ca.go.ke?${params.toString()}`;
+                window.location.href = redirectUrl;
             }, 2000);
         } catch (err) {
             setError(err.response?.data?.message || "Registration failed. Try again.");
@@ -119,7 +122,7 @@ const Register = () => {
 
             <div className="mt-3 d-flex flex-column align-items-center w-100" style={{ maxWidth: "400px" }}>
                 <Button variant="link" onClick={() => navigate("/privacy-policy")} className="w-100">Privacy Policy</Button>
-                <Button variant="outline-secondary" onClick={() => navigate(`/recover?${params}`)} className="w-100 mt-2">Already Registered?</Button>
+                <Button variant="outline-secondary" onClick={() => navigate(`/recover`)} className="w-100 mt-2">Already Registered?</Button>
             </div>
         </Container>
     );

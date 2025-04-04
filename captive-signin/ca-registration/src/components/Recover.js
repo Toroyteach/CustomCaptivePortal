@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Container, Form, Button, Alert, Spinner } from "react-bootstrap";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useQueryParams } from "../context/QueryContext";
 
 const Recover = () => {
+    const queryParams = useQueryParams();
     const navigate = useNavigate();
-    const location = useLocation();
-    const params = new URLSearchParams(location.search);
     const [phone, setPhone] = useState("");
     const [privacyChecked, setPrivacyChecked] = useState(false);
     const [message, setMessage] = useState("");
@@ -28,8 +28,11 @@ const Recover = () => {
         try {
             await axios.post(`${API_URL}/auth/recover`, { mobilephone: phone });
             setMessage("Registration successfull! Check your phone for login details.");
+            const queryString = new URLSearchParams(queryParams).toString();
+            const redirectUrl = `http://guestwifi.ca.go.ke?${queryString}`;
+
             setTimeout(() => {
-                window.location.href = `http://guestwifi.ca.go.ke?${params.toString()}`;
+                window.location.href = redirectUrl;
             }, 2000);
         } catch (err) {
             setError(err.response?.data?.message || "User not found. Try again.");
@@ -62,7 +65,7 @@ const Recover = () => {
                 </Form.Group>
 
                 <Button type="submit" variant="primary" className="w-100 mb-2" disabled={loading}>
-                    {loading ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : "Recover"}
+                    {loading ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : "Submit"}
                 </Button>
             </Form>
 

@@ -2,22 +2,20 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import PrivacyPolicy from "./components/Privacy";
 import Recover from "./components/Recover";
 import Register from "./components/Register";
+import { QueryProvider } from "./context/QueryContext";
 
 function App() {
   return (
     <Router>
-      <Routes>
-        {/* Landing page redirects to Register */}
-        <Route path="/" element={<Navigate to="/register" replace />} />
-
-        {/* Available Routes */}
-        <Route path="/register" element={<Register />} />
-        <Route path="/recover" element={<Recover />} />
-        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-
-        {/* Catch-all route: Redirects unknown paths to Register */}
-        <Route path="*" element={<Navigate to="/register" replace />} />
-      </Routes>
+      <QueryProvider>
+        <Routes>
+          <Route path="/" element={<Navigate to="/register" replace />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/recover" element={<Recover />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="*" element={<Navigate to="/register" replace />} />
+        </Routes>
+      </QueryProvider>
     </Router>
   );
 }
