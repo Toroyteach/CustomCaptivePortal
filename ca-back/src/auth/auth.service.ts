@@ -64,7 +64,7 @@ export class AuthService {
             await this.userInfoRepository.save(registrationData);
 
             const existing = await this.radCheckRepository.findOne({ where: { username: phone } });
-            const password = Math.random().toString(36).slice(-8);
+            const password = chance.word({ length: 6 });
             const expiryDate = new Date(Date.now() + 8 * 60 * 60 * 1000);
 
             let rad: RadCheckModel;
