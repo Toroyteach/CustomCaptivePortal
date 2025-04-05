@@ -55,12 +55,14 @@ const Register = () => {
         setMessage("");
         setLoading(true);
 
+        
         try {
             await axios.post(`${API_URL}/auth/register`, form);
             setMessage("Registration successfull! Check your phone for login details.");
-            const queryString = new URLSearchParams(queryParams).toString();
-            const redirectUrl = `http://guestwifi.ca.go.ke?${queryParams}`;
-
+            
+            const queryString = decodeURIComponent(new URLSearchParams(queryParams).toString());
+            const redirectUrl = `http://guestwifi.ca.go.ke/register?${queryString}`;
+            
             setTimeout(() => {
                 window.location.href = redirectUrl;
             }, 2000);
