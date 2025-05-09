@@ -61,7 +61,7 @@ const Register = () => {
             setMessage("Registration successfull! Check your phone for login details.");
             
             const queryString = decodeURIComponent(new URLSearchParams(queryParams).toString());
-            const redirectUrl = `http://guestwifi.ca.go.ke/register?${queryString}`;
+            const redirectUrl = `http://guestwifi.ca.go.ke/?${queryString}`;
             
             setTimeout(() => {
                 window.location.href = redirectUrl;
