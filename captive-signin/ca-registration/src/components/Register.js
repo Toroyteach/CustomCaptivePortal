@@ -62,9 +62,12 @@ const Register = () => {
             
             const queryString = decodeURIComponent(new URLSearchParams(queryParams).toString());
             const redirectUrl = `http://guestwifi.ca.go.ke/?${queryString}`;
+
+            console.log(redirectUrl)
+            console.log(queryString)
             
             setTimeout(() => {
-                window.location.href = redirectUrl;
+                //window.location.href = redirectUrl;
             }, 2000);
         } catch (err) {
             setError(err.response?.data?.message || "Registration failed. Try again.");
