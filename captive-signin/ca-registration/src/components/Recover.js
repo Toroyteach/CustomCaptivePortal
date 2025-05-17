@@ -29,7 +29,7 @@ const Recover = () => {
             await axios.post(`${API_URL}/auth/recover`, { mobilephone: phone });
             setMessage("Registration successfull! Check your phone for login details.");
 
-            const redirectUrl = `http://guestwifi.ca.go.ke/?switch_url=${queryParams.switch_url || ''}` +
+            const redirectUrl = `http://guestwifi.ca.go.ke/?switch_url=${queryParams.switch_url || 'https://192.0.2.1/login.html'}` +
                 `&ap_mac=${queryParams.ap_mac || ''}` +
                 `&client_mac=${queryParams.client_mac || ''}` +
                 `&wlan=${queryParams.wlan || ''}` +

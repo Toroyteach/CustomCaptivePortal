@@ -61,7 +61,7 @@ const Register = () => {
             await axios.post(`${API_URL}/auth/register`, form);
             setMessage("Registration successfull! Check your phone for login details.");
 
-            const redirectUrl = `http://guestwifi.ca.go.ke/?switch_url=${queryParams.switch_url || ''}` +
+            const redirectUrl = `http://guestwifi.ca.go.ke/?switch_url=${queryParams.switch_url || 'https://192.0.2.1/login.html'}` +
                 `&ap_mac=${queryParams.ap_mac || ''}` +
                 `&client_mac=${queryParams.client_mac || ''}` +
                 `&wlan=${queryParams.wlan || ''}` +
@@ -128,11 +128,11 @@ const Register = () => {
                 </Button>
             </Form>
 
-            {redirectUrl && (
+            {/* {redirectUrl && (
                 <Alert variant="info" className="w-100 text-center mt-3">
                     Redirect URL: <br /><code>{redirectUrl}</code>
                 </Alert>
-            )}
+            )} */}
 
             <div className="mt-3 d-flex flex-column align-items-center w-100" style={{ maxWidth: "400px" }}>
                 <Button variant="link" onClick={() => navigate("/privacy-policy")} className="w-100">Privacy Policy</Button>
