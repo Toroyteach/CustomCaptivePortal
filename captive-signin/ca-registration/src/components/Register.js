@@ -128,6 +128,12 @@ const Register = () => {
                 </Button>
             </Form>
 
+            {redirectUrl && (
+                <Alert variant="info" className="w-100 text-center mt-3">
+                    Redirect URL: <br /><code>{redirectUrl}</code>
+                </Alert>
+            )}
+
             <div className="mt-3 d-flex flex-column align-items-center w-100" style={{ maxWidth: "400px" }}>
                 <Button variant="link" onClick={() => navigate("/privacy-policy")} className="w-100">Privacy Policy</Button>
                 <Button variant="outline-secondary" onClick={() => navigate(`/recover`)} className="w-100 mt-2">Already Registered?</Button>
