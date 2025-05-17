@@ -28,9 +28,12 @@ const Recover = () => {
         try {
             await axios.post(`${API_URL}/auth/recover`, { mobilephone: phone });
             setMessage("Registration successfull! Check your phone for login details.");
-            
-            const queryString = decodeURIComponent(new URLSearchParams(queryParams).toString());
-            const redirectUrl = `http://guestwifi.ca.go.ke/?switch_url=http://192.0.2.1/login.html`;
+
+            const redirectUrl = `http://guestwifi.ca.go.ke/?switch_url=${encodeURIComponent(queryParams.switch_url || '')}` +
+                `&ap_mac=${encodeURIComponent(queryParams.ap_mac || '')}` +
+                `&client_mac=${encodeURIComponent(queryParams.client_mac || '')}` +
+                `&wlan=${encodeURIComponent(queryParams.wlan || '')}` +
+                `&redirect=${encodeURIComponent(queryParams.redirect || '')}`;
 
             setTimeout(() => {
                 window.location.href = redirectUrl;
