@@ -12,7 +12,6 @@ const Register = () => {
         email: "",
         privacyChecked: false
     });
-    const [redirectUrl, setRedirectUrl] = useState("");
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
@@ -56,18 +55,16 @@ const Register = () => {
         setMessage("");
         setLoading(true);
 
-
+        
         try {
             await axios.post(`${API_URL}/auth/register`, form);
             setMessage("Registration successfull! Check your phone for login details.");
-
+            
             const queryString = decodeURIComponent(new URLSearchParams(queryParams).toString());
             const redirectUrl = `http://guestwifi.ca.go.ke/?${queryString}`;
-
-            setRedirectUrl(redirectUrl);
-
+            
             setTimeout(() => {
-                //window.location.href = redirectUrl;
+                window.location.href = redirectUrl;
             }, 2000);
         } catch (err) {
             setError(err.response?.data?.message || "Registration failed. Try again.");
@@ -124,13 +121,6 @@ const Register = () => {
                     {loading ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : "Register"}
                 </Button>
             </Form>
-
-            {redirectUrl && (
-                <Alert variant="info" className="mt-3 w-100 text-break text-center" style={{ maxWidth: "400px" }}>
-                    Redirect URL: <br />
-                    <a href={redirectUrl}>{redirectUrl}</a>
-                </Alert>
-            )}
 
             <div className="mt-3 d-flex flex-column align-items-center w-100" style={{ maxWidth: "400px" }}>
                 <Button variant="link" onClick={() => navigate("/privacy-policy")} className="w-100">Privacy Policy</Button>
