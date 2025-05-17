@@ -71,7 +71,7 @@ const Register = () => {
 
 
             setTimeout(() => {
-                // window.location.href = redirectUrl;
+                window.location.href = redirectUrl;
             }, 2000);
         } catch (err) {
             setError(err.response?.data?.message || "Registration failed. Try again.");
