@@ -61,11 +61,11 @@ const Register = () => {
             await axios.post(`${API_URL}/auth/register`, form);
             setMessage("Registration successfull! Check your phone for login details.");
 
-            const redirectUrl = `http://guestwifi.ca.go.ke/?switch_url=${queryParams.switch_url || ''}` +
+            const redirectUrl = `http://guestwifi.ca.go.ke/?switch_url=http://192.0.2.1/login.html` +
                 `&ap_mac=${queryParams.ap_mac || ''}` +
-                `&client_mac=${encodeURIComponent(queryParams.client_mac || '')}` +
-                `&wlan=${encodeURIComponent(queryParams.wlan || '')}` +
-                `&redirect=${encodeURIComponent(queryParams.redirect || '')}`;
+                `&client_mac=${queryParams.client_mac || ''}` +
+                `&wlan=${queryParams.wlan || ''}` +
+                `&redirect=${queryParams.redirect || ''}`;
 
             setRedirectUrl(redirectUrl);
 
