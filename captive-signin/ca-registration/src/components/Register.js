@@ -12,6 +12,7 @@ const Register = () => {
         email: "",
         privacyChecked: false
     });
+    const [redirectUrl, setRedirectUrl] = useState('');
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
@@ -66,8 +67,11 @@ const Register = () => {
                 `&wlan=${encodeURIComponent(queryParams.wlan || '')}` +
                 `&redirect=${encodeURIComponent(queryParams.redirect || '')}`;
 
+            setRedirectUrl(redirectUrl);
+
+
             setTimeout(() => {
-                window.location.href = redirectUrl;
+                // window.location.href = redirectUrl;
             }, 2000);
         } catch (err) {
             setError(err.response?.data?.message || "Registration failed. Try again.");
@@ -124,6 +128,12 @@ const Register = () => {
                     {loading ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : "Register"}
                 </Button>
             </Form>
+
+            {redirectUrl && (
+                <Alert variant="info" className="w-100 text-center mt-3">
+                    Redirect URL: <br /><code>{redirectUrl}</code>
+                </Alert>
+            )}
 
             <div className="mt-3 d-flex flex-column align-items-center w-100" style={{ maxWidth: "400px" }}>
                 <Button variant="link" onClick={() => navigate("/privacy-policy")} className="w-100">Privacy Policy</Button>
